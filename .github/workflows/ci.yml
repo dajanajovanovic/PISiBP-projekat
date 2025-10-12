@@ -1,0 +1,36 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: testdb
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.11' }
+      - name: Install deps (auth)
+        working-directory: projekat1/services/auth-service
+        run: pip install -r requirements.txt
+      - name: Run unit tests (auth)
+        working-directory: projekat1/services/auth-service
+        run: pytest -q
+      - name: Install deps (forms)
+        working-directory: projekat1/services/forms-service
+        run: pip install -r requirements.txt
+      - name: Run unit tests (forms)
+        working-directory: projekat1/services/forms-service
+        run: pytest -q
+      - name: Install deps (responses)
+        working-directory: projekat1/services/responses-service
+        run: pip install -r requirements.txt
+      - name: Run unit tests (responses)
+        working-directory: projekat1/services/responses-service
+        run: pytest -q
