@@ -1,0 +1,83 @@
+services:
+  auth-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: auth
+      POSTGRES_USER: auth
+      POSTGRES_PASSWORD: auth
+    ports: ["5433:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U auth -d auth"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  forms-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: forms
+      POSTGRES_USER: forms
+      POSTGRES_PASSWORD: forms
+    ports: ["5434:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U forms -d forms"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  responses-db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: resp
+      POSTGRES_USER: resp
+      POSTGRES_PASSWORD: resp
+    ports: ["5435:5432"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U resp -d resp"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  auth-service:
+    build: ./services/auth-service
+    env_file: .env
+    environment:
+      DATABASE_URL: ${AUTH_DB}
+    ports: ["8001:8000"]
+    depends_on:
+      auth-db:
+        condition: service_healthy
+
+  forms-service:
+    build: ./services/forms-service
+    env_file: .env
+    environment:
+      DATABASE_URL: ${FORMS_DB}
+    ports: ["8002:8000"]
+    depends_on:
+      forms-db:
+        condition: service_healthy
+
+  responses-service:
+    build: ./services/responses-service
+    env_file: .env
+    environment:
+      DATABASE_URL: ${RESP_DB}
+      FORMS_API: "http://forms-service:8002"
+    ports: ["8003:8000"]
+    depends_on:
+      responses-db:
+        condition: service_healthy
+
+  web-frontend:
+    build: ./frontend
+    env_file: .env
+    environment:
+      VITE_AUTH_API: http://localhost:8001
+      VITE_FORMS_API: http://localhost:8002
+      VITE_RESPONSES_API: http://localhost:8003
+    ports: ["5173:80"]
+    depends_on:
+      - auth-service
+      - forms-service
+      - responses-service
