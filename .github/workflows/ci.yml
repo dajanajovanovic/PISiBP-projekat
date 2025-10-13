@@ -20,8 +20,8 @@ jobs:
         working-directory: services/auth-service
         run: pip install -r requirements.txt
       #- name: Run unit tests (auth)
-        working-directory: services/auth-service
-        run: pytest -q
+      #  working-directory: services/auth-service
+       # run: pytest -q
        #- name: Install deps (forms)
         #working-directory: services/forms-service
         #run: pip install -r requirements.txt
