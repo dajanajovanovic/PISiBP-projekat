@@ -17,20 +17,20 @@ jobs:
       - uses: actions/setup-python@v5
         with: { python-version: '3.11' }
       - name: Install deps (auth)
-        working-directory: projekat1/services/auth-service
+        working-directory: PISiBP-projekat/services/auth-service
         run: pip install -r requirements.txt
       - name: Run unit tests (auth)
-        working-directory: projekat1/services/auth-service
+        working-directory: PISiBP-projekat/services/auth-service
         run: pytest -q
       - name: Install deps (forms)
-        working-directory: projekat1/services/forms-service
+        working-directory: PISiBP-projekat/services/forms-service
         run: pip install -r requirements.txt
       - name: Run unit tests (forms)
-        working-directory: projekat1/services/forms-service
+        working-directory: PISiBP-projekat/services/forms-service
         run: pytest -q
       - name: Install deps (responses)
-        working-directory: projekat1/services/responses-service
+        working-directory: PISiBP-projekat/services/responses-service
         run: pip install -r requirements.txt
       - name: Run unit tests (responses)
-        working-directory: projekat1/services/responses-service
+        working-directory: PISiBP-projekat/services/responses-service
         run: pytest -q
