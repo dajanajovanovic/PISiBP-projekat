@@ -1,0 +1,6 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.btn { @apply px-3 py-2 rounded-xl border shadow-sm text-sm; }
+.input { @apply px-3 py-2 rounded-xl border shadow-sm text-sm; }
