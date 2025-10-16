@@ -1,0 +1,527 @@
+{
+	"info": {
+		"_postman_id": "4ac57f2b-0d52-4601-b7bc-cf045f7cc0cf",
+		"name": "Collection Auth",
+		"description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "49301201",
+		"_collection_link": "https://sandraantanasijevic2-3389974.postman.co/workspace/Sandra-Antanasijevi%25C4%2587's-Workspac~83eb4347-2a2c-4b90-8935-ae59561a8119/collection/49301201-4ac57f2b-0d52-4601-b7bc-cf045f7cc0cf?action=share&source=collection_link&creator=49301201"
+	},
+	"item": [
+		{
+			"name": "TC01 - Health Check",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Provera da je status HTTP 200",
+							"pm.test(\"Health endpoint returns 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// Provera da JSON sadrži status ok",
+							"pm.test(\"Health status is ok\", function () {",
+							"    const json = pm.response.json();",
+							"    pm.expect(json.status).to.eql(\"ok\");",
+							"});",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"health"
+					]
+				},
+				"description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+			},
+			"response": []
+		},
+		{
+			"name": "TC02 - Register User",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"qa_user@mail.com\",\r\n  \"password\": \"Passw0rd!\",\r\n  \"full_name\": \"QA User\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/register",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC03 - Login",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/login?email=aleksandar@gmail.com&password=Passw0rd!",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "aleksandar@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "Passw0rd!"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC04 - Get me (info)",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET /me returns 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains user data\", function () {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.expect(res).to.have.property(\"email\");\r",
+							"    pm.expect(res).to.have.property(\"id\");\r",
+							"    pm.expect(res).to.have.property(\"full_name\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGVrc2FuZGFyQGdtYWlsLmNvbSIsInVpZCI6MSwibmFtZSI6IkFsZWtzYW5kYXIgQW50In0.j2K-x-ARzARI2yB4kUyxu7_uu1uQCTT6OlniH0G-nb8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC05 - Put me",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"PUT /me returns 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response contains updated user data\", function () {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.expect(res.full_name).to.eql(\"QA User Updated\");\r",
+							"    pm.expect(res).to.have.property(\"email\");\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGVrc2FuZGFyQGdtYWlsLmNvbSIsInVpZCI6MSwibmFtZSI6IkFsZWtzYW5kYXIgQW50In0.j2K-x-ARzARI2yB4kUyxu7_uu1uQCTT6OlniH0G-nb8",
+						"description": "application/json",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"full_name\": \"QA User Updated\",\r\n  \"password\": \"Passw0rd!\"  \r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/me",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"me"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC06 - List users",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"GET /users returns 200\", function () {\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response is an array\", function () {\r",
+							"    const res = pm.response.json();\r",
+							"    pm.expect(res).to.be.an(\"array\");\r",
+							"});\r",
+							"\r",
+							"pm.test(\"First user has id and email\", function () {\r",
+							"    const res = pm.response.json();\r",
+							"    if(res.length > 0) {\r",
+							"        pm.expect(res[0]).to.have.property(\"id\");\r",
+							"        pm.expect(res[0]).to.have.property(\"email\");\r",
+							"    }\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript",
+						"packages": {},
+						"requests": {}
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGVrc2FuZGFyQGdtYWlsLmNvbSIsInVpZCI6MSwibmFtZSI6IkFsZWtzYW5kYXIgQW50In0.j2K-x-ARzARI2yB4kUyxu7_uu1uQCTT6OlniH0G-nb8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC07 - Login admin",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/login?email=saki@gmail.com&password=saki1234&",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"login"
+					],
+					"query": [
+						{
+							"key": "email",
+							"value": "saki@gmail.com"
+						},
+						{
+							"key": "password",
+							"value": "saki1234"
+						},
+						{
+							"key": "",
+							"value": null
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC08 - List users od strane admina",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWtpQGdtYWlsLmNvbSIsInVpZCI6MiwibmFtZSI6IlNhbmRyYSBBbnRhbmFzaWpldmljIn0.INlNk1xN2pNxJG3KKfTrpffOsUnlpbxkZD29D4Trbqc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC09 - Create user",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWtpQGdtYWlsLmNvbSIsInVpZCI6MiwibmFtZSI6IlNhbmRyYSBBbnRhbmFzaWpldmljIn0.INlNk1xN2pNxJG3KKfTrpffOsUnlpbxkZD29D4Trbqc",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"novi_user2@mail.com\",\r\n  \"password\": \"UserPass123!\",\r\n  \"full_name\": \"Novi User2\",\r\n  \"role\": \"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC010 - Get user",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWtpQGdtYWlsLmNvbSIsInVpZCI6MiwibmFtZSI6IlNhbmRyYSBBbnRhbmFzaWpldmljIn0.INlNk1xN2pNxJG3KKfTrpffOsUnlpbxkZD29D4Trbqc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/users/2",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC011 - Update User",
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWtpQGdtYWlsLmNvbSIsInVpZCI6MiwibmFtZSI6IlNhbmRyYSBBbnRhbmFzaWpldmljIn0.INlNk1xN2pNxJG3KKfTrpffOsUnlpbxkZD29D4Trbqc",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"novi_user_updated@mail.com\",\r\n  \"full_name\": \"Novi User Updated\",\r\n  \"role\": \"user\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8001/users/23",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users",
+						"23"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC012 - Delete user",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhbGVrc2FuZGFyQGdtYWlsLmNvbSIsInVpZCI6MSwibmFtZSI6IkFsZWtzYW5kYXIgQW50In0.j2K-x-ARzARI2yB4kUyxu7_uu1uQCTT6OlniH0G-nb8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/users/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "TC013 - Delete User od strane admina",
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJzYWtpQGdtYWlsLmNvbSIsInVpZCI6MiwibmFtZSI6IlNhbmRyYSBBbnRhbmFzaWpldmljIn0.INlNk1xN2pNxJG3KKfTrpffOsUnlpbxkZD29D4Trbqc",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://localhost:8001/users/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8001",
+					"path": [
+						"users",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
