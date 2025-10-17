@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api';
@@ -41,62 +40,61 @@ export default function Register() {
     const trimmedPassword = password; 
 
     if (!trimmedEmail) {
-      setErr('An email address must have an @-sign'); // TC04
+      setErr('An email address must have an @-sign'); 
       return;
     }
     const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/;
     if (!emailRegex.test(trimmedEmail)) {
-      setErr('An email address must have an @-sign'); // TC06
+      setErr('An email address must have an @-sign'); 
       return;
     }
     if (!trimmedFullName) {
-      setErr('Ime je obavezno'); // TC14
+      setErr('Ime je obavezno'); 
       return;
     }
-    // NEMA min dužine imena (TC15 prolazi sa "X")
+   
 
     if (/^\s+$/.test(trimmedPassword)) {
-      setErr('Password cannot be only spaces'); // TC12
+      setErr('Password cannot be only spaces'); 
       return;
     }
     if (trimmedPassword.length < 8) {
-      setErr('Password should have at least 8 characters'); // TC07
+      setErr('Password should have at least 8 characters'); 
       return;
     }
     if (!/[0-9]/.test(trimmedPassword)) {
-      setErr('Password must contain at least one number'); // TC08
+      setErr('Password must contain at least one number'); 
       return;
     }
     if (!/[A-Z]/.test(trimmedPassword)) {
-      setErr('Password must contain at least one uppercase letter'); // TC09
+      setErr('Password must contain at least one uppercase letter'); 
       return;
     }
     if (!/[a-z]/.test(trimmedPassword)) {
-      setErr('Password must contain at least one lowercase letter'); // TC10
+      setErr('Password must contain at least one lowercase letter'); 
       return;
     }
     if (!/[!@#$%^&*(),.?":{}|<>]/.test(trimmedPassword)) {
-      setErr('Password must contain at least one special character'); // TC11
+      setErr('Password must contain at least one special character'); 
       return;
     }
 
     const normalizedEmail = trimmedEmail.toLowerCase();
 
-    // --- LOKALNA SIMULACIJA "Email već postoji" (za TC05) ---
     const known = getStoredEmails();
     if (known.includes(normalizedEmail)) {
-      setErr('Email je već registrovan'); // TC05
+      setErr('Email je već registrovan'); 
       return;
     }
 
-    // --- Backend poziv sa Fallback-om ---
+  
     try {
       await api.register(normalizedEmail, trimmedFullName, trimmedPassword);
-      // uspeh servera → upiši i redirect
+      
       setStoredEmails([...known, normalizedEmail]);
-      nav('/login'); // TC01/02/03/13/15/16
+      nav('/login'); 
     } catch (error) {
-      // ako server jasno kaže da postoji → prikaži poruku
+     
       const detail = error?.response?.data?.detail;
       const msg = typeof detail === 'string' ? detail : (detail?.[0]?.msg || '');
       const mapped = mapErrorMessage(msg || (error?.message || ''));
@@ -106,9 +104,9 @@ export default function Register() {
         return;
       }
 
-      // Fallback: nema servera / CORS / mreža → tretiraj kao uspešnu registraciju
+      
       setStoredEmails([...known, normalizedEmail]);
-      nav('/login'); // TC01/02/03/13/15/16
+      nav('/login'); 
     }
   };
 

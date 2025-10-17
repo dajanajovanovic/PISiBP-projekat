@@ -2,7 +2,7 @@
 const AUTH = import.meta.env.VITE_AUTH_API || 'http://localhost:8001';
 const FORMS = import.meta.env.VITE_FORMS_API || 'http://localhost:8002';
 const RESP  = import.meta.env.VITE_RESPONSES_API || 'http://localhost:8003';
-const AUTH_LOGIN_MODE = import.meta.env.VITE_AUTH_LOGIN_MODE || 'query'; // 'query' | 'json' | 'form'
+const AUTH_LOGIN_MODE = import.meta.env.VITE_AUTH_LOGIN_MODE || 'query'; 
 const RESP_SUBMIT_PATH = import.meta.env.VITE_RESPONSES_SUBMIT_PATH || '/submit';
 
 
@@ -18,7 +18,7 @@ const asJson = async (r) => {
 const authH = (t) => (t ? { Authorization: 'Bearer ' + t } : {});
 
 export const api = {
-  // ---------------- Auth ----------------
+ 
   register: (email, full_name, password) =>
     fetch(`${AUTH}/register`, {
       method: 'POST',
@@ -46,14 +46,14 @@ export const api = {
       }).then(asJson);
     }
 
-    // default: 'query'
+    
     return fetch(`${AUTH}/login?email=${e}&password=${p}`, { method: 'POST' }).then(asJson);
   },
 
   me: (t) =>
     fetch(`${AUTH}/me`, { headers: { ...authH(t) } }).then(asJson),
 
-  // --------------- Forms ----------------
+  
   createForm: (t, payload) =>
     fetch(`${FORMS}/forms`, {
       method: 'POST',
@@ -79,11 +79,12 @@ export const api = {
   myForms: (t) =>
     fetch(`${FORMS}/my/forms`, { headers: { ...authH(t) } }).then(asJson),
 
-  // Napomena: /forms/{id} traži auth; za gosta koristi getFormMetaPublic
+ 
+  
   getForm: (t, id) =>
     fetch(`${FORMS}/forms/${id}`, { headers: { ...authH(t) } }).then(asJson),
 
-  // Javni meta endpoint (bez auth), koristi se za prikaz/popunjavanje
+ 
   getFormMetaPublic: (id) =>
     fetch(`${FORMS}/forms/${id}/meta`).then(asJson),
 
@@ -100,7 +101,7 @@ export const api = {
       headers: { ...authH(t) },
     }).then((r) => r.ok),
 
-  // ------------- Questions --------------
+  
   addQuestion: (t, formId, q) =>
     fetch(`${FORMS}/forms/${formId}/questions`, {
       method: 'POST',
@@ -133,17 +134,34 @@ export const api = {
       headers: { 'Content-Type': 'application/json', ...authH(t) },
       body: JSON.stringify(order),
     }).then(asJson),
+    
+
+listCollabs: (t, formId) =>
+  fetch(`${FORMS}/forms/${formId}/collaborators`, {
+    headers: { ...authH(t) },
+  }).then(asJson),
+
+addCollab: (t, formId, email, role) =>
+  fetch(`${FORMS}/forms/${formId}/collaborators`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...authH(t) },
+    body: JSON.stringify({ email, role }),
+  }).then(asJson),
+
+delCollab: (t, formId, collabId) =>
+  fetch(`${FORMS}/forms/${formId}/collaborators/${collabId}`, {
+    method: 'DELETE',
+    headers: { ...authH(t) },
+  }).then(() => ({ ok: true })),
 
  
 
-// ------------- Responses --------------
 submit: async (payload, token) => {
   const headers = {
     'Content-Type': 'application/json',
     ...(token ? { Authorization: 'Bearer ' + token } : {}),
   };
 
-  // Dozvoli i templatisan path, npr. "/forms/{id}/submit"
   let path = RESP_SUBMIT_PATH;
   if (path.includes('{id}')) path = path.replace('{id}', String(payload.form_id));
   if (path.includes(':id')) path = path.replace(':id', String(payload.form_id));
@@ -162,7 +180,6 @@ submit: async (payload, token) => {
 },
 
 
-  // (Po potrebi dodaj token ako backend traži autorizaciju za list/aggregate/export)
   listResponses: (id, t) =>
     fetch(`${RESP}/forms/${id}/responses`, {
       headers: { ...(t ? authH(t) : {}) },

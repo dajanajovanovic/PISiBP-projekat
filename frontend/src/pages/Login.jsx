@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../api';
@@ -13,7 +12,6 @@ export default function Login() {
   const { setToken, setMe, setGuest } = useAuth();
 
   const mapErrorMessage = (status, detail, fallbackMsg) => {
-  // Izvuci sirovu poruku iz različitih oblika
   const raw =
     (typeof detail === 'string' ? detail : detail?.[0]?.msg) ||
     fallbackMsg ||
@@ -49,7 +47,7 @@ export default function Login() {
     return 'Server error — prijava trenutno nije moguća, pokušajte kasnije.';
   }
 
-  // Fallback
+  
   return raw || 'Login failed. Please try again.';
 };
 
@@ -61,7 +59,7 @@ export default function Login() {
     const trimmedEmail = email.trim();
     const pwd = password;
 
-    // --- Frontend validacije ---
+    
     if (!trimmedEmail) {
       setErr('An email address must have an @-sign (Email field cannot be empty).');
       return;
