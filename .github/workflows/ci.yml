@@ -1,36 +1,80 @@
 name: CI
-on: [push, pull_request]
+
+on:
+  push:
+    branches: [ "*" ]
+  pull_request:
+
 jobs:
-  test:
+  unit-tests:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: testdb
-        ports: ['5432:5432']
-        options: >-
-          --health-cmd="pg_isready -U postgres" --health-interval=10s --health-timeout=5s --health-retries=5
+
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with: { python-version: '3.11' }
-      - name: Install deps (auth)
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Auth deps & tests
         working-directory: services/auth-service
-        run: pip install -r requirements.txt
-      #- name: Run unit tests (auth)
-      #  working-directory: services/auth-service
-       # run: pytest -q
-       #- name: Install deps (forms)
-        #working-directory: services/forms-service
-        #run: pip install -r requirements.txt
-       #- name: Run unit tests (forms)
-        #working-directory: services/forms-service
-        #run: pytest -q
-       #- name: Install deps (responses)
-        #working-directory: services/responses-service
-        #run: pip install -r requirements.txt
-       #- name: Run unit tests (responses)
-        #working-directory: services/responses-service
-        #run: pytest -q
+        env:
+          PYTHONPATH: .
+        run: |
+          pip install -r requirements.txt
+          pytest -q
+
+      - name: Forms deps & tests
+        working-directory: services/forms-service
+        env:
+          PYTHONPATH: .
+        run: |
+          pip install -r requirements.txt
+          pytest -q
+
+      - name: Responses deps & test
+        working-directory: services/responses-service
+        env:
+          PYTHONPATH: .
+          FORMS_API: http://localhost:9999
+        run: |
+          pip install -r requirements.txt
+          pytest -q
+
+  frontend-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+      - name: Install & Build
+        working-directory: frontend
+        run: |
+          npm ci || npm i
+          npm run build
+
+  docker-build:
+    runs-on: ubuntu-latest
+    needs: [unit-tests, frontend-build]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build images (no push)
+        run: |
+          docker build -t fineforms-auth:ci ./services/auth-service
+          docker build -t fineforms-forms:ci ./services/forms-service
+          docker build -t fineforms-resp:ci ./services/responses-service
+          docker build -t fineforms-web:ci ./frontend
