@@ -1,0 +1,16 @@
+node_modules/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.env
+.env.*
+.DS_Store
+
+dist/
+build/
+.cache/
+coverage/
+
+.git
+.gitignore
