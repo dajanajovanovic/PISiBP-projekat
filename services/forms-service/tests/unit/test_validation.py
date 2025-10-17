@@ -23,3 +23,4 @@ def test_validate_numeric_range_invalid_step():
     q = QuestionIn(text="Age", type="numeric", options_json={"range":{"start":0,"end":10,"step":0}})
     with pytest.raises(HTTPException):
         validate_question_payload(q)
+
