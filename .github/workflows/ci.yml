@@ -26,19 +26,24 @@ jobs:
 
       - name: Auth deps & tests
         working-directory: services/auth-service
+        env:
+          PYTHONPATH: .
         run: |
           pip install -r requirements.txt
           pytest -q
 
       - name: Forms deps & tests
         working-directory: services/forms-service
+        env:
+          PYTHONPATH: .
         run: |
           pip install -r requirements.txt
           pytest -q
 
-      - name: Responses deps & tests
+      - name: Responses deps & test
         working-directory: services/responses-service
         env:
+          PYTHONPATH: .
           FORMS_API: http://localhost:9999
         run: |
           pip install -r requirements.txt
