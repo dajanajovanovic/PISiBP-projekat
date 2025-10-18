@@ -97,7 +97,7 @@ Ready for future CI/CD pipeline (GitHub Actions / Jenkins)
 Health endpoints for monitoring (/health)
 
 ## Folder Structure
-
+```
 .
 ├── services/
 │   ├── auth-service/
@@ -118,7 +118,7 @@ Health endpoints for monitoring (/health)
 ├── package.json
 ├── package-lock.json
 └── README.md
-
+```
 
 ## Improvements and Future Work
 
