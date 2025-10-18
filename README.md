@@ -1,6 +1,6 @@
 # ProjectApp – Microservice Form Platform
 
-A web application for creating, sharing, and analyzing online forms, built with .NET Core / Python (FastAPI) and a microservice architecture.
+A web application for creating, sharing, and analyzing online forms, built with React + Python (FastAPI) and a microservice architecture.
 Each service runs independently and communicates via REST APIs.
 
 ## Architecture Overview
@@ -17,6 +17,13 @@ responses-service – stores user answers, aggregates data, exports XLSX
 web-frontend – Vite + JS SPA for UI interaction
 
 PostgreSQL databases – each service has its own DB
+
+## Application Architecture Diagram
+
+![Application Architecture](./appDiagram.png)
+
+*Figure 1. Overview of the FormBuilder architecture: React frontend ↔ FastAPI microservices (auth, forms, responses); each service has its own DB; authentication via JWT.*
+
 
 ## Technologies Used
 
@@ -87,7 +94,7 @@ Each service has its own .dockerignore
 
 Ready for future CI/CD pipeline (GitHub Actions / Jenkins)
 
-Health endpoints for monitoring (/healthz)
+Health endpoints for monitoring (/health)
 
 ## Folder Structure
 
@@ -95,12 +102,12 @@ Health endpoints for monitoring (/healthz)
 ├── services/
 │   ├── auth-service/
 │   ├── forms-service/
-│   ├── responses-service/
+│   └── responses-service/
 │
 ├── frontend/
 │   ├── src/
 │   ├── public/
-│   ├── Dockerfile
+│   └── Dockerfile
 │
 ├── postman/
 ├── tests/
@@ -111,6 +118,7 @@ Health endpoints for monitoring (/healthz)
 ├── package.json
 ├── package-lock.json
 └── README.md
+
 
 ## Improvements and Future Work
 
